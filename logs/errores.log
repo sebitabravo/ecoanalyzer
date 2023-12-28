@@ -1,0 +1,11 @@
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Program Files\Python312\Lib\tkinter\__init__.py", line 1962, in __call__
+    return self.func(*args)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Sebastian Bravo\AppData\Roaming\Python\Python312\site-packages\customtkinter\windows\widgets\ctk_button.py", line 554, in _clicked
+    self._command()
+  File "C:\Users\Sebastian Bravo\Desktop\ecoanalyzer\src\login_screen.py", line 75, in verificar_credenciales
+    main_app.main()
+    ^^^^^^^^^^^^^
+AttributeError: module 'main_app' has no attribute 'main'
