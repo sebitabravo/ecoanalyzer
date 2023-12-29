@@ -17,13 +17,13 @@ Permite a los usuarios:
 1. Clona este repositorio:
 
    ```bash
-   git clone https://github.com/sebitabravo/ecoanalyzer.git
+   git clone https://github.com/sebitabravo/EcoAnalyzer.git
    ```
 
 2. Accede al directorio del proyecto:
 
    ```bash
-   cd ecoanalyzer
+   cd EcoAnalyzer
    ```
 
 3. Ejecuta el archivo "**run**.py":
