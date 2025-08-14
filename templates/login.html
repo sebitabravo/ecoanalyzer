@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Login - EcoAnalyzer{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center min-vh-100 align-items-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-0 login-card">
+            <div class="row g-0">
+                <div class="col-md-6 login-image">
+                    <div class="h-100 d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white">
+                            <h2 class="mb-3">🌱</h2>
+                            <h4 class="fw-bold">EcoAnalyzer</h4>
+                            <p class="opacity-75">Análisis financiero inteligente</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card-body p-5">
+                        <h3 class="card-title text-primary fw-bold mb-1">¡Bienvenido!</h3>
+                        <p class="text-muted mb-4">Inicia sesión en tu cuenta</p>
+                        
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label for="usuario" class="form-label text-primary fw-bold">
+                                    📧 Usuario:
+                                </label>
+                                <input type="text" class="form-control custom-input" id="usuario" 
+                                       name="usuario" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="contrasena" class="form-label text-primary fw-bold">
+                                    🔒 Contraseña:
+                                </label>
+                                <input type="password" class="form-control custom-input" id="contrasena" 
+                                       name="contrasena" required>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="recordar">
+                                <label class="form-check-label text-muted" for="recordar">
+                                    Recordarme
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100 fw-bold py-2">
+                                INICIAR SESIÓN
+                            </button>
+                        </form>
+                        
+                        <div class="mt-4 text-center">
+                            <small class="text-muted">
+                                Usuario demo: <strong>admin</strong> | Contraseña: <strong>1234</strong>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

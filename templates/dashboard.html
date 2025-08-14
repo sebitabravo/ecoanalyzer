@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - EcoAnalyzer{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <!-- Formulario de productos -->
+    <div class="col-12">
+        <div class="card shadow border-0 mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0 fw-bold">📊 Gestión de Productos</h5>
+            </div>
+            <div class="card-body">
+                <form id="productoForm" method="POST" action="{{ url_for('agregar_producto') }}">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="dia" class="form-label text-primary fw-bold">Día:</label>
+                            <input type="text" class="form-control custom-input" id="dia" name="dia" 
+                                   placeholder="ej. 2025-01-15" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="nombre" class="form-label text-primary fw-bold">Producto:</label>
+                            <input type="text" class="form-control custom-input" id="nombre" name="nombre" 
+                                   placeholder="Nombre del producto" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="precio" class="form-label text-primary fw-bold">Precio:</label>
+                            <input type="number" class="form-control custom-input" id="precio" name="precio" 
+                                   step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="vendido" class="form-label text-primary fw-bold">Cantidad:</label>
+                            <input type="number" class="form-control custom-input" id="vendido" name="vendido" 
+                                   placeholder="0" required>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success fw-bold me-2" id="btnAgregar">
+                                ➕ Agregar Producto
+                            </button>
+                            <button type="button" class="btn btn-warning fw-bold me-2" id="btnCancelar" 
+                                    style="display: none;" onclick="cancelarEdicion()">
+                                ❌ Cancelar
+                            </button>
+                            <button type="button" class="btn btn-info fw-bold" onclick="mostrarGraficos()">
+                                📈 Mostrar Gráficos
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Tabla de productos -->
+    <div class="col-lg-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0 fw-bold">📋 Lista de Productos</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover mb-0">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Día</th>
+                                <th>Producto</th>
+                                <th>Hora</th>
+                                <th>Precio</th>
+                                <th>Vendido</th>
+                                <th>Ganancia</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for producto in productos %}
+                            <tr>
+                                <td>{{ producto[1] }}</td>
+                                <td>{{ producto[2] }}</td>
+                                <td>{{ producto[3] }}</td>
+                                <td>${{ "%.2f"|format(producto[4]) }}</td>
+                                <td>{{ producto[5] }}</td>
+                                <td class="text-success fw-bold">${{ "%.2f"|format(producto[6]) }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning me-1" 
+                                            onclick="editarProducto({{ producto[0] }}, '{{ producto[1] }}', '{{ producto[2] }}', {{ producto[4] }}, {{ producto[5] }})">
+                                        ✏️
+                                    </button>
+                                    <form method="POST" action="{{ url_for('eliminar_producto', producto_id=producto[0]) }}" 
+                                          style="display: inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este producto?')">
+                                        <button type="submit" class="btn btn-sm btn-danger">🗑️</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    No hay productos registrados
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de gráficos -->
+    <div class="col-lg-4">
+        <div class="card shadow border-0" id="graficosPanel" style="display: none;">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0 fw-bold">📈 Gráfico de Ganancias</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="graficaGanancias" width="400" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let editandoProducto = null;
+let graficoVisible = false;
+let chartInstance = null;
+
+function editarProducto(id, dia, nombre, precio, vendido) {
+    editandoProducto = id;
+    
+    document.getElementById('dia').value = dia;
+    document.getElementById('nombre').value = nombre;
+    document.getElementById('precio').value = precio;
+    document.getElementById('vendido').value = vendido;
+    
+    document.getElementById('btnAgregar').textContent = '💾 Guardar Cambios';
+    document.getElementById('btnCancelar').style.display = 'inline-block';
+    
+    const form = document.getElementById('productoForm');
+    form.action = `/editar_producto/${id}`;
+}
+
+function cancelarEdicion() {
+    editandoProducto = null;
+    
+    document.getElementById('productoForm').reset();
+    document.getElementById('btnAgregar').textContent = '➕ Agregar Producto';
+    document.getElementById('btnCancelar').style.display = 'none';
+    
+    const form = document.getElementById('productoForm');
+    form.action = "{{ url_for('agregar_producto') }}";
+}
+
+async function mostrarGraficos() {
+    const panel = document.getElementById('graficosPanel');
+    
+    if (graficoVisible) {
+        panel.style.display = 'none';
+        graficoVisible = false;
+        if (chartInstance) {
+            chartInstance.destroy();
+            chartInstance = null;
+        }
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/graficos');
+        const data = await response.json();
+        
+        panel.style.display = 'block';
+        graficoVisible = true;
+        
+        const ctx = document.getElementById('graficaGanancias').getContext('2d');
+        
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        
+        chartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.nombres,
+                datasets: [{
+                    label: 'Ganancias ($)',
+                    data: data.ganancias,
+                    backgroundColor: [
+                        '#2cb67d', '#7f5af0', '#ff6b6b', '#4ecdc4', 
+                        '#45b7d1', '#f9ca24', '#f0932b', '#eb4d4b'
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Ganancias por Producto',
+                        color: '#ffffff'
+                    },
+                    legend: {
+                        labels: {
+                            color: '#ffffff'
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#ffffff'
+                        },
+                        grid: {
+                            color: '#444'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#ffffff'
+                        },
+                        grid: {
+                            color: '#444'
+                        }
+                    }
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error al cargar gráficos:', error);
+        alert('Error al cargar los gráficos');
+    }
+}
+
+// Auto-completar fecha actual
+document.addEventListener('DOMContentLoaded', function() {
+    const fechaInput = document.getElementById('dia');
+    if (!fechaInput.value) {
+        const hoy = new Date().toISOString().split('T')[0];
+        fechaInput.value = hoy;
+    }
+});
+</script>
+{% endblock %}
