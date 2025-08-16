@@ -48,6 +48,65 @@ python web_app.py
 
 La aplicación se abrirá automáticamente en tu navegador en `http://localhost:8080`
 
+## ⚙️ Configuración de variables de entorno
+
+Para un funcionamiento óptimo y seguro de la aplicación, configura estas variables de entorno:
+
+### Variables requeridas
+
+```bash
+FLASK_ENV=production
+SECRET_KEY=tu_clave_secreta_super_segura_aqui
+PORT=8081
+```
+
+### Métodos de configuración
+
+#### Opción 1: Archivo .env (Recomendado)
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```bash
+# .env
+FLASK_ENV=production
+SECRET_KEY=mi_aplicacion_ecoanalyzer_2025_clave_ultra_segura_123456789
+PORT=8081
+```
+
+#### Opción 2: Terminal (Temporal)
+
+```bash
+export FLASK_ENV=production
+export SECRET_KEY=tu_clave_secreta_super_segura_aqui
+export PORT=8081
+python web_app.py
+```
+
+#### Opción 3: Shell profile (Permanente)
+
+```bash
+# Para zsh (macOS/Linux)
+echo 'export FLASK_ENV=production' >> ~/.zshrc
+echo 'export SECRET_KEY=tu_clave_secreta_super_segura_aqui' >> ~/.zshrc
+echo 'export PORT=8081' >> ~/.zshrc
+source ~/.zshrc
+```
+
+#### Opción 4: Para desarrollo
+
+```bash
+# Modo desarrollo con debug activado
+FLASK_ENV=development python web_app.py
+```
+
+### Descripción de variables
+
+- **`FLASK_ENV`**: Configura el entorno (production/development)
+- **`SECRET_KEY`**: Clave secreta para sesiones (¡cámbiala por una segura!)
+- **`PORT`**: Puerto donde se ejecuta la aplicación (por defecto 8081)
+
+⚠️ **Importante**: Nunca subas el archivo `.env` a repositorios públicos. Ya está incluido en `.gitignore`.
+
 ## 🔑 Credenciales por defecto
 
 - **Usuario:** admin
