@@ -8,6 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     sqlite3 \
     gcc \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar archivo de dependencias
