@@ -255,7 +255,7 @@ def api_graficos():
 @app.route('/health')
 def health_check():
     """Health check para Docker/Dokploy"""
-    return jsonify({'status': 'healthy'}), 200
+    return jsonify({'status': 'healthy', 'service': 'ecoanalyzer'}), 200
 
 if __name__ == '__main__':
     init_databases()

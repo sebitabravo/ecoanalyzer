@@ -1,34 +1,38 @@
+# Imagen base de Python 3.11 slim
 FROM python:3.11-slim
 
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Instalar dependencias del sistema
+# Instalar dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
+    sqlite3 \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar archivos de dependencias
+# Copiar archivo de dependencias
 COPY requirements.txt .
 
-# Instalar dependencias Python
+# Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar código de la aplicación
+# Copiar todo el código de la aplicación
 COPY . .
 
-# Crear directorios necesarios
+# Crear directorios necesarios para la aplicación
 RUN mkdir -p database logs
 
-# Dar permisos de escritura a directorios
-RUN chmod 777 database logs
+# Establecer permisos adecuados
+RUN chmod 755 database logs
 
-# Exponer puerto
+# Exponer el puerto de la aplicación
 EXPOSE 8081
 
-# Variables de entorno
+# Variables de entorno por defecto
 ENV FLASK_APP=web_app.py
 ENV FLASK_ENV=production
+ENV PORT=8081
+ENV PYTHONUNBUFFERED=1
 
-# Comando para ejecutar la aplicación
+# Comando de inicio de la aplicación
 CMD ["python", "web_app.py"]

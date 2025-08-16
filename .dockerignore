@@ -1,0 +1,43 @@
+# Ignorar archivos de Git
+.git
+.gitignore
+
+# Ignorar archivos de Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+
+# Ignorar archivos de desarrollo
+.vscode
+.idea
+*.swp
+*.swo
+
+# Ignorar archivos del SO
+.DS_Store
+Thumbs.db
+
+# Ignorar archivo de variables de entorno (pero mantener .env.example si existe)
+.env
+
+# Ignorar logs locales
+logs/*.log
+
+# Ignorar bases de datos locales (se crearán en el contenedor)
+database/*.db
+
+# Ignorar README del proyecto original (solo si existe)
+README.md
