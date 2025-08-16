@@ -12,8 +12,8 @@ services:
       - PORT=8081
       - PYTHONUNBUFFERED=1
     volumes:
-      - ./database:/app/database
-      - ./logs:/app/logs
+      - database_data:/app/database
+      - logs_data:/app/logs
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
@@ -29,5 +29,7 @@ networks:
     driver: bridge
 
 volumes:
-  database:
-  logs:
+  database_data:
+    driver: local
+  logs_data:
+    driver: local

@@ -257,6 +257,21 @@ def health_check():
     """Health check para Docker/Dokploy"""
     return jsonify({'status': 'healthy', 'service': 'ecoanalyzer'}), 200
 
+@app.route('/test')
+def test_route():
+    """Ruta de prueba para verificar conectividad"""
+    return jsonify({
+        'message': 'EcoAnalyzer funcionando correctamente',
+        'timestamp': datetime.datetime.now().isoformat(),
+        'routes_available': [
+            '/',
+            '/login', 
+            '/dashboard',
+            '/health',
+            '/test'
+        ]
+    }), 200
+
 if __name__ == '__main__':
     init_databases()
 
